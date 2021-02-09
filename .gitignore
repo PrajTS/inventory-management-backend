@@ -1,0 +1,5 @@
+node_modules
+dist
+src/pre-start/env/production.env
+src/pre-start/env/test.env
+src/pre-start/env/development.env

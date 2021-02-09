@@ -1,0 +1,5 @@
+export const CONSTANTS = {
+    PINBALL: 'pinball',
+    COOKIE_MAX_AGE_MILLIS: 1000 * 60 * 30,
+    COOKIE_MAX_AGE_EXTENDED_MILLIS: 1000 * 60 * 60 * 24 * 10,
+}
