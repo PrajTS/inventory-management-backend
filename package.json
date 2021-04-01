@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "build": "ts-node build.ts",
+    "build:prod": "ts-node build.ts --env=production",
+    "build:dev": "ts-node build.ts --env=development",
     "lint": "eslint . --ext .ts",
     "start:prod": "node -r module-alias/register ./dist --env=production",
     "start:dev": "node -r module-alias/register ./dist --env=development",
