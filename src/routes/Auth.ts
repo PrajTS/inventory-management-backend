@@ -14,12 +14,12 @@ router.post('/login', async (req: Request, res: Response) => {
         const { extend = false } = req.query;
         const { userCred, password } = req.body;
         const { data: user } = await axios.post(
-            `${process.env.AUTH_MICROSERVICE_URL as string}login`,
+            `${process.env.USER_MANAGER_MICROSERVICE_URL as string}/checkCreds`,
             {
                 userCred,
                 password
             });
-        req.session.user = JSON.stringify(user || {});
+        req.session.user = user || {};
         if (extend) {
             req.session.cookie.maxAge = CONSTANTS.COOKIE_MAX_AGE_EXTENDED_MILLIS;
         }
@@ -51,7 +51,10 @@ router.get('/logout', (req: Request, res: Response) => {
 });
 
 router.use('/', authProxy,
-    createProxyMiddleware({ target: process.env.USER_MGMNT_MICROSERVICE_URL, changeOrigin: true })
+    createProxyMiddleware({
+        target: process.env.AUTHENTICATOR_MICROSERVICE_URL,
+        changeOrigin: true
+    })
 );
 
 export default router;
