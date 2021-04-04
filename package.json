@@ -9,7 +9,9 @@
     "start:prod": "node -r module-alias/register ./dist --env=production",
     "start:dev": "node -r module-alias/register ./dist --env=development",
     "start": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json"
+    "test": "nodemon --config ./spec/nodemon.json",
+    "build-start:dev": "npm run build:dev && npm run start:dev",
+    "build-start:prod": "npm run build:prod && npm run start:prod"
   },
   "nodemonConfig": {
     "watch": [
