@@ -36,7 +36,7 @@ redisClient.on('connect', () => logger.info("Connected to redis"));
 
 declare module "express-session" {
     interface Session {
-        user: string;
+        user: any;
     }
 }
 

@@ -22,11 +22,19 @@ router.post('/login', async (req: Request, res: Response) => {
                 userCred,
                 password
             });
-        req.session.user = { ...user } || {};
+        const userDetails = user.user;
+        req.session.user = userDetails || {};
         if (extend) {
             req.session.cookie.maxAge = CONSTANTS.COOKIE_MAX_AGE_EXTENDED_MILLIS;
         }
-        return res.status(OK).send(user);
+        const userResponse = {
+            user: {
+                userCred: userDetails.userCred,
+                fullName: userDetails.fullName,
+                displayPicture: userDetails.displayPicture,
+            }
+        };
+        return res.status(OK).send(userResponse);
     } catch (e) {
         logger.err(e);
         return res.status(UNAUTHORIZED).send(_.get(e, 'response.data'));
@@ -36,7 +44,14 @@ router.post('/login', async (req: Request, res: Response) => {
 router.get('/me', (req: Request, res: Response) => {
     const user = _.get(req, 'session.user');
     if (user) {
-        res.status(OK).send(user);
+        const userResponse = {
+            user: {
+                userCred: user.userCred,
+                fullName: user.fullName,
+                displayPicture: user.displayPicture,
+            }
+        };
+        res.status(OK).send(userResponse);
     } else {
         res.status(UNAUTHORIZED).end();
     }
