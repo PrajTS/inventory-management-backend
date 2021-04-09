@@ -1,10 +1,12 @@
 import { authProxy } from '@middlewares/Proxy';
+import { userManagementMicroserviceUrl } from '@services/util';
 import { CONSTANTS } from '@shared/constants';
 import logger from '@shared/Logger';
 import axios from 'axios';
 import { Request, Response, Router } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import StatusCodes from 'http-status-codes';
+import _ from 'lodash';
 
 const router = Router();
 const { OK, UNAUTHORIZED, INTERNAL_SERVER_ERROR, BAD_REQUEST } = StatusCodes;
@@ -14,7 +16,8 @@ router.post('/login', async (req: Request, res: Response) => {
         const { extend = false } = req.query;
         const { userCred, password } = req.body;
         const { data: user } = await axios.post(
-            `${process.env.USER_MANAGER_MICROSERVICE_URL as string}/checkCreds`,
+            // eslint-disable-next-line max-len
+            `${userManagementMicroserviceUrl()}/check-user-creds`,
             {
                 userCred,
                 password
@@ -23,10 +26,10 @@ router.post('/login', async (req: Request, res: Response) => {
         if (extend) {
             req.session.cookie.maxAge = CONSTANTS.COOKIE_MAX_AGE_EXTENDED_MILLIS;
         }
-        return res.status(OK).send();
+        return res.status(OK).send(user);
     } catch (e) {
-        logger.err(e)
-        return res.status(UNAUTHORIZED).send();
+        logger.err(e);
+        return res.status(UNAUTHORIZED).send(_.get(e, 'response.data'));
     }
 });
 
