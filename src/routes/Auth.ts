@@ -22,7 +22,7 @@ router.post('/login', async (req: Request, res: Response) => {
                 userCred,
                 password
             });
-        req.session.user = user || {};
+        req.session.user = { ...user } || {};
         if (extend) {
             req.session.cookie.maxAge = CONSTANTS.COOKIE_MAX_AGE_EXTENDED_MILLIS;
         }
@@ -34,10 +34,12 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 router.get('/me', (req: Request, res: Response) => {
-    if (req.session.user) {
-        res.status(OK).end();
+    const user = _.get(req, 'session.user');
+    if (user) {
+        res.status(OK).send(user);
+    } else {
+        res.status(UNAUTHORIZED).end();
     }
-    res.status(UNAUTHORIZED).end();
 });
 
 router.get('/logout', (req: Request, res: Response) => {
@@ -45,9 +47,10 @@ router.get('/logout', (req: Request, res: Response) => {
         req.session.destroy((err: any) => {
             if (err) {
                 res.status(INTERNAL_SERVER_ERROR).send("Unable to logout");
+            } else {
+                res.status(OK).end();
             }
-            res.status(OK).end();
-        })
+        });
     } else {
         res.status(BAD_REQUEST).send("User was not logged it.");
     }
