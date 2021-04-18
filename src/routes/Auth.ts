@@ -74,7 +74,15 @@ router.get('/logout', (req: Request, res: Response) => {
 router.use('/', authProxy,
     createProxyMiddleware({
         target: process.env.AUTHENTICATOR_MICROSERVICE_URL,
-        changeOrigin: true
+        changeOrigin: true,
+        onProxyReq: (proxyReq, req: Request) => {
+            if (req?.body) {
+                const bodyData = JSON.stringify(req.body);
+                proxyReq.setHeader('Content-Type', 'application/json');
+                proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                proxyReq.write(bodyData);
+            }
+        }
     })
 );
 

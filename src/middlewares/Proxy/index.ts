@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
 export const authProxy = (request: Request, response: Response, next: NextFunction) => {
-    if (request.method === 'GET' && request.url === '/ping') {
-        next();
+    const initialValue = request.headers.authorization;
+    try {
+        if (request.session.user) {
+            request.headers.authorization = JSON.stringify(request.session.user);
+        }
+    } catch (e) {
+        request.headers.authorization = initialValue;
     }
-    else if (request.session.user) {
-        request.headers.authorization = JSON.stringify(request.session.user);
-        next();
-    } else {
-        response.status(401).end();
-    }
+    next();
 }
