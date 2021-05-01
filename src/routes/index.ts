@@ -15,5 +15,9 @@ router.use('/v1/account', UsersRouter);
 
 router.use('/v1/teams', TeamsRouter);
 
+router.use('/v1/games', TeamsRouter);
+
+router.use('/v1/invites', TeamsRouter);
+
 // Export the base-router
 export default router;
