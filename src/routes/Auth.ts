@@ -25,7 +25,8 @@ router.post("/login", async (req: Request, res: Response) => {
       }
     );
     const userDetails = user.user;
-    req.session.user = userDetails || {};
+    const id = _.get(userDetails, "id");
+    req.session.user = { ...(id && { id }) };
     if (extend) {
       req.session.cookie.maxAge = CONSTANTS.COOKIE_MAX_AGE_EXTENDED_MILLIS;
     }
@@ -43,18 +44,40 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/me", (req: Request, res: Response) => {
-  const user = _.get(req, "session.user");
-  if (user) {
-    const userResponse = {
-      user: {
-        userCred: user.userCred,
-        fullName: user.fullName,
-        displayPicture: user.displayPicture,
-      },
-    };
-    res.status(OK).send(userResponse);
-  } else {
+router.get("/me", async (req: Request, res: Response) => {
+  try {
+    const sessionUser = _.get(req, "session.user");
+    if (!_.isEmpty(sessionUser) && sessionUser.id) {
+      const { data } = await axios.post(
+        `${userManagementMicroserviceUrl()}/find`,
+        {
+          query: {
+            _id: sessionUser.id,
+          },
+          projection: {
+            userCred: 1,
+            fullName: 1,
+            displayPicture: 1,
+          },
+        }
+      );
+      const user = data?.user;
+      if (_.isEmpty(user)) {
+        throw "User does not exist";
+      }
+      const userResponse = {
+        user: {
+          userCred: user.userCred,
+          fullName: user.fullName,
+          displayPicture: user.displayPicture,
+        },
+      };
+      res.status(OK).send(userResponse);
+    } else {
+      throw "unauth";
+    }
+  } catch (e) {
+    logger.err(e);
     res.status(UNAUTHORIZED).end();
   }
 });
