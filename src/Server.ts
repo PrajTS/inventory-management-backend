@@ -27,10 +27,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const RedisStore = connectRedis(session);
-const redisClient = redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: +(process.env.REDIS_PORT as string),
-});
+const redisClient = redis.createClient(process.env.REDIS_CONNECTION_STRING as string);
 
 redisClient.on('connect', () => logger.info("Connected to redis"));
 
