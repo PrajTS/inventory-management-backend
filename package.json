@@ -5,13 +5,16 @@
     "build": "ts-node build.ts",
     "build:prod": "ts-node build.ts --env=production",
     "build:dev": "ts-node build.ts --env=development",
+    "build:qat": "ts-node build.ts --env=qat",
     "lint": "eslint . --ext .ts",
     "start:prod": "node -r module-alias/register ./dist --env=production",
     "start:dev": "node -r module-alias/register ./dist --env=development",
+    "start:qat": "node -r module-alias/register ./dist --env=qat",
     "start": "nodemon",
     "test": "nodemon --config ./spec/nodemon.json",
+    "build-start:prod": "npm run build:prod && npm run start:prod",
     "build-start:dev": "npm run build:dev && npm run start:dev",
-    "build-start:prod": "npm run build:prod && npm run start:prod"
+    "build-start:qat": "npm run build:qat && npm run start:qat"
   },
   "nodemonConfig": {
     "watch": [
