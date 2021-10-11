@@ -1,6 +1,7 @@
 import './pre-start'; // Must be the first import
 import app from '@server';
 import logger from '@shared/Logger';
+import './post-start/db'
 
 
 // Start the server

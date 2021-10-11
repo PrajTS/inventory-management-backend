@@ -7,7 +7,6 @@ import session from 'express-session';
 import helmet from 'helmet';
 import StatusCodes from 'http-status-codes';
 import morgan from 'morgan';
-import redis from 'redis';
 import BaseRouter from './routes';
 
 const app = express();
@@ -26,23 +25,18 @@ if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 }
 
-const RedisStore = connectRedis(session);
-const redisClient = redis.createClient(process.env.REDIS_CONNECTION_STRING as string);
-
-redisClient.on('connect', () => logger.info("Connected to redis"));
 
 declare module "express-session" {
     interface Session {
         user: any;
     }
 }
-
+app.set('trust proxy', 1)
 app.use(session({
-    name: CONSTANTS.PINBALL,
+    name: CONSTANTS.APP_NAME,
     secret: process.env.COOKIE_SECRET_KEY as string,
     resave: false,
     saveUninitialized: false,
-    store: new RedisStore({ client: redisClient }),
     rolling: true,
     cookie: {
         secure: false, // if true only transmit cookie over https

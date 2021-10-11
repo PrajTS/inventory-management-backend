@@ -69,25 +69,24 @@
     "build.ts"
   ],
   "dependencies": {
-    "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
     "command-line-args": "^5.1.1",
-    "connect-redis": "^5.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "express-session": "^1.17.1",
     "express-validator": "^6.9.2",
     "helmet": "^4.4.1",
-    "http-proxy-middleware": "^1.0.6",
     "http-status-codes": "^2.1.4",
     "jet-logger": "^1.0.4",
     "jsonfile": "^6.1.0",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
-    "redis": "^3.0.2"
+    "mysql2": "^2.3.0"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.36",
     "@types/command-line-args": "^5.0.0",
     "@types/connect-redis": "0.0.16",
     "@types/express": "^4.17.11",
@@ -99,7 +98,6 @@
     "@types/lodash": "^4.14.168",
     "@types/morgan": "^1.9.2",
     "@types/node": "^14.14.22",
-    "@types/redis": "^2.8.28",
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
